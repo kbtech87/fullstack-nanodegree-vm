@@ -21,6 +21,7 @@ def testCount():
         raise TypeError(
             "countPlayers should return numeric zero, not string '0'.")
     if c != 0:
+        print "value of c is %s." % c
         raise ValueError("After deletion, countPlayers should return zero.")
     print "1. countPlayers() returns 0 after initial deletePlayers() execution."
     registerPlayer("Chandra Nalaar")

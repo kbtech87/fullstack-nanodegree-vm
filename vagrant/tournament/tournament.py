@@ -13,14 +13,32 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    db = connect()
+    c = db.cursor()
+    c.execute("DELETE FROM matches;")
+    db.commit()
+    db.close()
+    
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    db = connect()
+    c = db.cursor()
+    c.execute("DELETE FROM players;")
+    db.commit()
+    db.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    db = connect()
+    c = db.cursor()
+    c.execute("SELECT count(id) FROM players;")
+    count = c.fetchone()[0]
+    db.commit()
+    db.close()
+    return count
 
 
 def registerPlayer(name):
@@ -32,6 +50,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    db = connect()
+    c = db.cursor()
+    c.execute("INSERT INTO players (name) VALUES (%s);", (name,))
+    db.commit()
+    db.close()
 
 
 def playerStandings():
@@ -47,6 +70,13 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    db = connect()
+    c = db.cursor()
+    c.execute("SELECT * FROM standings;") #uses views to provide standings
+    results = c.fetchall()
+    db.commit()
+    db.close()
+    return results
 
 
 def reportMatch(winner, loser):
@@ -56,6 +86,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    db = connect()
+    c = db.cursor()
+    c.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s);",
+              (winner, loser))
+    db.commit()
+    db.close()
  
  
 def swissPairings():
@@ -73,5 +109,22 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
+    db = connect()
+    c = db.cursor()
+    standings = playerStandings() #list of data from playerStandings
+    all_pairs = []
+    even_pairs = []
+    odd_pairs = []
+    index = 0
+    for index, val in enumerate(standings): #creates 2 lists 
+        if index % 2 == 0:
+            even_pairs.append((val[0], val[1]))
+        else:
+            odd_pairs.append((val[0], val[1]))
+            
+    for i,j in zip(even_pairs, odd_pairs): #zips 2 lists to create matches
+        all_pairs.append((i[0],i[1], j[0], j[1]))
+        print all_pairs
+    return all_pairs
+    db.close()
 
