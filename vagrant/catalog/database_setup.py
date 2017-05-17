@@ -32,7 +32,14 @@ class Items(Base): #corresponds to table
     )
     categories = relationship(Categories)
 
-
+    @property
+    def serialize(self):
+        #Returns object data in easily serializable format
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+        }
 
 
 

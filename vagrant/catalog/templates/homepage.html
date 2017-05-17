@@ -1,6 +1,7 @@
 <html>
   <body>
-    <h1>{{category.name}}</h1>
-
+    {% for c in categories %}
+      <h1>{{c.name}}</h1>
+    {% endfor %}
   </body>
 </html>

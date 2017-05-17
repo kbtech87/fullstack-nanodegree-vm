@@ -1,19 +1,25 @@
 <html>
   <body>
-    <h1>{{categories.name}}</h1>
+    <h1>{{category.name}}</h1>
+  </br>
+    <a href="{{url_for('newItem', category_id=category.id)}}">Create Item</a>
+  </br>
+  </br>
 
     {% for i in items %}
 
     {{i.name}}
   </br>
 
+
     {{i.description}}
   </br>
-    <a href='{{url_for('editItem', category_id=categories.id,
-    item_id=items.id)}}'>Edit</a>
+
+    <a href="{{url_for('editItem', category_id=category.id,
+    item_id=i.id)}}">Edit</a>
   </br>
-    <a href='{{url_for('deleteItem', category_id=categories.id,
-    item_id=items.id)}}'>Delete</a>
+    <a href="{{url_for('deleteItem', category_id=category.id,
+    item_id=i.id)}}">Delete</a>
 
     {% endfor %}
   </body>
