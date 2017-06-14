@@ -11,7 +11,7 @@
 
 <div id="signInButton">
   <span class="g-signin"
-    data-scope="openid"
+    data-scope="openid email"
     data-clientid="691948348283-3vq4rcej5mp17cd6rh81u1md11jeqk2r.apps.googleusercontent.com"
     data-redirecturi="postmessage"
     data-accesstype="offline"
@@ -21,6 +21,39 @@
   </span>
 </div>
 <div id="result"></div>
+
+<script>
+function signInCallBack(authResult) {
+  if (authResult['code']) {
+    //Hide the sign-in button now that user is authorized
+    $('#signinButton').attr('style', 'display: none');
+    //Send the one-time-use code to the server, if the server responds, write
+    //a 'login successful' message to the web page and then redirect back to
+    //main page
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{STATE}}',
+      processData: false,
+      contentType: 'application/octet-stream; charset=utf-8',
+      data: authResult['code'],
+      success: function(result) {
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result +
+          '</br>Redirecting...')
+          setTimeout(function() {
+            window.location.href = '/';
+          }, 4000);
+        } else if (authResult['error']) {
+          console.log('There was an error: ' + authResult['error']);
+        } else {
+          $('#result').html(
+            'Failed to make a server-side call. Check your configuration and console.');
+        }
+      }
+    })
+  }
+}
+</script>
 
 </body>
 </html>
