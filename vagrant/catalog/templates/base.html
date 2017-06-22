@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' type='text/css' href='/static/styles.css' />
+  </head>
+
+  <body>
+    <div class='container'>
+      {% block content %}
+        {% if 'username' not in login_session %}
+          <a class='button' href="{{url_for('showLogin')}}">Login</a>
+        {% else %}
+          <a class='button' href="{{url_for('gdisconnect')}}">Logout</a>
+        {% endif %}
+      {% endblock %}
+    </div>
+
+  </body>
+
+
+</html>

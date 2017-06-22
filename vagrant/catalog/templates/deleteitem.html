@@ -1,5 +1,5 @@
-<html>
-  <body>
+{% extends "base.html" %}
+{% block content %}
   <h1>Are you sure you want to delete {{i.name}}?</h1>
   </br>
 
@@ -10,7 +10,4 @@
 
   <a href= "{{url_for('itemList', category_id=i.category_id)}}">Cancel</a>
   </form>
-
-
-  </body>
-</html>  
+{% endblock %}

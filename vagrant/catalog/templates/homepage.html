@@ -1,7 +1,14 @@
-<html>
-  <body>
+{% extends "base.html" %}
+{% block content %}
+
     {% for c in categories %}
-      <h1>{{c.name}}</h1>
+      <a class='category-link' href="{{url_for('itemList', category_id=c.id)}}"
+        >{{c.name}}</a>
+      </br>
     {% endfor %}
-  </body>
-</html>
+
+  </br>
+    <a class='button' href="{{url_for('newCategory')}}">Create Category</a>
+  </br>
+
+{% endblock %}

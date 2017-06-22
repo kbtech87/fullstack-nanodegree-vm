@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Are you sure you want to delete {{c.name}}?</h1>
+  </br>
+
+  <form action="{{url_for('deleteCategory', category_id=category_id)}}"
+  method='post'>
+
+    <input type='submit' value='Delete'>
+
+  <a href= "{{url_for('homepage')}}">Cancel</a>
+  </form>
+{% endblock %}

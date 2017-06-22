@@ -1,5 +1,5 @@
-<html>
-  <body>
+{% extends "base.html" %}
+{% block content %}
   <h1>Edit Item</h1>
   </br>
 
@@ -8,12 +8,14 @@
 
     <p>Name:</p>
     <input type='text' size='30' name='name' placeholder="{{i.name}}">
+    <p>Description:</p>
+    <textarea type='text' maxlength='250' name='description' placeholder=
+    "{{i.description}}"></textarea>
+    </br>
+    </br>
 
     <input type='submit' value='Save Changes'>
 
   <a href= "{{url_for('itemList', category_id=i.category_id)}}">Cancel</a>
   </form>
-
-
-  </body>
-</html>
+{% endblock %}

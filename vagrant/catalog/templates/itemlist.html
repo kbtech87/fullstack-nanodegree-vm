@@ -1,6 +1,13 @@
-<html>
-  <body>
+{% extends "base.html" %}
+{% block content %}
     <h1>{{category.name}}</h1>
+  </br>
+    <a href="{{url_for('editCategory', category_id=category_id)}}">Edit Category
+    </a>
+  </br>
+    <a href="{{url_for('deleteCategory', category_id=category_id)}}">Delete
+      Category</a>
+  </br>
   </br>
     <a href="{{url_for('newItem', category_id=category.id)}}">Create Item</a>
   </br>
@@ -22,5 +29,8 @@
     item_id=i.id)}}">Delete</a>
 
     {% endfor %}
-  </body>
-</html>
+  </br>
+  </br>
+    <a href="{{url_for('homepage')}}">Home</a>
+
+{% endblock %}

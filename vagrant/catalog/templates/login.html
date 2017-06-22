@@ -1,5 +1,5 @@
-<html>
-<head>
+{% extends "base.html" %}
+{% block content %}
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
   </script>
   <script src="https://apis.google.com/js/client:platform.js?onload=start"
@@ -55,5 +55,4 @@ function signInCallBack(authResult) {
 }
 </script>
 
-</body>
-</html>
+{% endblock %}

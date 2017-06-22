@@ -151,11 +151,57 @@ def homepage():
     print "categories:", categories
     return render_template('homepage.html', categories=categories)
 
+@app.route('/categories/new', methods=['GET', 'POST'])
+def newCategory():
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newCategory = Categories(name= request.form['name'],
+        user_id=login_session['user_id'])
+        session.add(newCategory)
+        session.commit()
+        return redirect(url_for('homepage'))
+    else:
+        return render_template('newcategory.html')
+
+@app.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
+def editCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    editedCategory = session.query(Categories).filter_by(id=category_id).one()
+    if editedCategory.user_id != login_session['user_id']:
+        return "You are not authorized to edit this category."
+    if request.method =='POST':
+        if request.form['name']:
+            editedCategory.name = request.form['name']
+        session.add(editedCategory)
+        session.commit()
+        return redirect(url_for('homepage'))
+    else:
+        return render_template('editcategory.html', category_id=category_id,
+         c=editedCategory)
+
+@app.route('/categories/<int:category_id>/delete',
+methods=['GET', 'POST'])
+def deleteCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    deletedCategory = session.query(Categories).filter_by(id=category_id).one()
+    if deletedCategory.user_id != login_session['user_id']:
+        return "You are not authorized to delete this item."
+    if request.method == 'POST':
+        session.delete(deletedCategory)
+        session.commit()
+        return redirect(url_for('homepage'))
+    else:
+        return render_template('deletecategory.html', category_id=category_id,
+         c=deletedCategory)
+
 @app.route('/categories/<int:category_id>/items')
 def itemList(category_id):
     category = session.query(Categories).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category_id).all()
-    creator = getUserInfo(categories.user_id)
+    creator = getUserInfo(category.user_id)
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicitems.html', category=category,
         items=items, category_id=category_id, creator=creator)
@@ -169,7 +215,8 @@ def newItem(category_id):
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newItem = Items(name= request.form['name'], category_id=category_id,
+        newItem = Items(name= request.form['name'], description=request.form[
+        'description'], category_id=category_id,
         user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
@@ -183,9 +230,14 @@ def editItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Items).filter_by(id=item_id).one()
+    category = session.query(Categories).filter_by(id=category_id).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "You are not authorized to edit this item."
     if request.method =='POST':
         if request.form['name']:
             editedItem.name = request.form['name']
+        if request.form['description']:
+            editedItem.description = request.form['description']
         session.add(editedItem)
         session.commit()
         return redirect(url_for('itemList', category_id=category_id))
@@ -199,8 +251,11 @@ def deleteItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     deletedItem = session.query(Items).filter_by(id=item_id).one()
+    category = session.query(Categories).filter_by(id=category_id).one()
+    if deletedItem.user_id != login_session['user_id']:
+        return "You are not authorized to delete this item."
     if request.method == 'POST':
-        session.remove(deletedItem)
+        session.delete(deletedItem)
         session.commit()
         return redirect(url_for('itemList', category_id=category_id))
     else:
